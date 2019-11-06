@@ -46,7 +46,7 @@ while game_over == False:
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 x_change = 0
-                x += x_change
+                #x += x_change
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
