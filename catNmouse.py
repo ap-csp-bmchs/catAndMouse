@@ -26,12 +26,15 @@ cheese_height = 34
 #cat starting point info
 x = (50)
 y = (display_height - cat_height*2)
+catRect = pygame.Rect(x, y, cat_width, cat_height)
 #mouse starting point info
 mx = (display_width - mouse_width)
 my = 0
+mouseRect = pygame.Rect(mx, my, mouse_width, mouse_height)
 #cheese starting point info
 cx = 0
 cy = display_height - cheese_height
+cheeseRect = pygame.Rect(cx, cy, cheese_width, cheese_height)
 
 #cat location change variables
 x_change = 0
@@ -46,9 +49,9 @@ new_mx = 0
 new_my = 0
 
 #image rectangles
-catRect = catImg.get_rect()
-mouseRect = mouseImg.get_rect()
-cheeseRect = cheeseImg.get_rect()
+#catRect = catImg.get_rect()
+#mouseRect = mouseImg.get_rect()
+#cheeseRect = cheeseImg.get_rect()
 
 def cat(x,y):
     gameDisplay.blit(catImg, (x,y))
@@ -62,7 +65,8 @@ def cheese(cx,cy):
 #game loop
 game_over = False
 while game_over == False:
-    
+    catRect = pygame.Rect(x, y, cat_width, cat_height)
+    mouseRect = pygame.Rect(mx, my, mouse_width, mouse_height)
 #set up quit when user clicks the 'x'
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -111,24 +115,41 @@ while game_over == False:
             if event.key == pygame.K_w or event.key == pygame.K_s:
                 my_change = 0
         
+#is the cat touching the mouse?
+    
+    
+    
+    
+          
 
 #set up x & y change of cat to stay within window boundaries
-    new_x = x + x_change
-    if new_x >=0 and new_x <= display_width - cat_width:
-        x += x_change
+    
 
-    new_y = y + y_change
-    if new_y >= 0 and new_y <= display_height - cat_height:
-        y += y_change
+    if not catRect.colliderect(mouseRect):
+        new_x = x + x_change
+        new_y = y + y_change
+        if new_x >=0 and new_x <= display_width - cat_width:
+            x += x_change
+
+                                
+        if new_y >= 0 and new_y <= display_height - cat_height:
+            y += y_change
+    
 
 #set up x & y change of mouse to stay within window boundaries
-    new_mx = mx + mx_change
-    if new_mx >=0 and new_mx <= display_width - mouse_width:
-        mx += mx_change
+        new_mx = mx + mx_change
+        new_my = my + my_change
+        
+        if new_mx >=0 and new_mx <= display_width - mouse_width:
+            mx += mx_change
 
-    new_my = my + my_change
-    if new_my >= 0 and new_my <= display_height - mouse_height:
-        my += my_change
+            
+        if new_my >= 0 and new_my <= display_height - mouse_height:
+            my += my_change
+
+    else:
+        x -= x_change
+        y -= y_change
 
 #set up when cat touches mouse sensing
     #if catRect.colliderect(mouseRect):
