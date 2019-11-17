@@ -1,5 +1,7 @@
 import pygame
 import random
+import time
+
 pygame.init()
 
 display_width = 1000
@@ -14,6 +16,15 @@ mouseImg = pygame.image.load('mouse.png')
 cheeseImg = pygame.image.load('cheese.png')
 cScoreImg = pygame.image.load('cScore.png')
 mScoreImg = pygame.image.load('mScore.png')
+catWinImg = pygame.image.load('big_cat.png')
+mouseWinImg = pygame.image.load('big_mouse.png')
+points = ['zero.png', 'one.png', 'two.png', 'three.png', 'four.png', 'five.png']
+cpoint_count = 0
+cpointsImg = pygame.image.load(points[0])
+mpoint_count = 0
+mpointsImg = pygame.image.load(points[0])
+
+
 
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -72,6 +83,8 @@ def cheese(cx,cy):
     gameDisplay.blit(cheeseImg, (cx,cy))
 
 #game loop
+cat_win = False
+mouse_win = False
 game_over = False
 while game_over == False:
     
@@ -123,7 +136,6 @@ while game_over == False:
             if event.key == pygame.K_w or event.key == pygame.K_s:
                 my_change = 0
         
-#is the cat touching the mouse?
     
     
     
@@ -132,8 +144,6 @@ while game_over == False:
 
 #set up x & y change of cat to stay within window boundaries
     
-
-    #if not catRect.colliderect(mouseRect):
     new_x = x + x_change
     new_y = y + y_change
     if new_x >=0 and new_x <= display_width - cat_width:
@@ -156,34 +166,81 @@ while game_over == False:
         my += my_change
 
 
-#set up when cat touches mouse sensing
-    #if catRect.colliderect(mouseRect):
+#set up what happens when images collide
+#make the cat or mouse move faster if lost round
+#make the game end when the cat or mouse reaches 5 points
+#set up a 3,2,1 countdown with images between points
     catRect = pygame.Rect(x, y, cat_width, cat_height)
     mouseRect = pygame.Rect(mx, my, mouse_width, mouse_height)
     
     if catRect.colliderect(mouseRect):
-        x -= x_change
-        y -= y_change
-        mx -= mx_change
-        my -= my_change
-    
+        x = (50)
+        y = (display_height - cat_height*2)
+        mx = (display_width - mouse_width)
+        my = 0
+        cpoint_count += 1
+        cpointsImg = pygame.image.load(points[cpoint_count])
+        if cpoint_count == 5:
+            game_over = True
+            cat_win = True
+            
+                        
+            
+        
+    if mouseRect.colliderect(cheeseRect):
+        mx = (display_width - mouse_width)
+        my = 0        
+        x = (50)
+        y = (display_height - cat_height*2)
+        mpoint_count += 1
+        mpointsImg = pygame.image.load(points[mpoint_count])  
+        if mpoint_count == 5:
+            game_over = True 
+            mouse_win = True
+        
+            
+                 
 
 
         
 
 #draw the frame
     gameDisplay.fill(white)
-    gameDisplay.blit(cScoreImg, (sx,sy))
-    gameDisplay.blit(mScoreImg, (0, cScore_height + 10))
     cat(x,y)
     mouse(mx,my)
     cheese(cx,cy)
-    pygame.display.flip()
+    
+    if cat_win == True:
+        gameDisplay.blit(catWinImg, (display_width * .35, display_height * .35))
+        gameDisplay.blit(cScoreImg, (sx,sy))
+        gameDisplay.blit(mScoreImg, (0, cScore_height + 10))
+        gameDisplay.blit(cpointsImg, (cScore_width,0))
+        gameDisplay.blit(mpointsImg, (mScore_width,mScore_height+10))        
+        pygame.display.flip()
+        time.sleep(10)
+        pygame.quit() 
+    elif mouse_win == True:
+        gameDisplay.blit(mouseWinImg, (display_width * .35, display_height * .35))
+        gameDisplay.blit(cScoreImg, (sx,sy))
+        gameDisplay.blit(mScoreImg, (0, cScore_height + 10))
+        gameDisplay.blit(cpointsImg, (cScore_width,0))
+        gameDisplay.blit(mpointsImg, (mScore_width,mScore_height+10)) 
+        pygame.display.flip()
+        time.sleep(10)
+        pygame.quit()    
+    else:
+        gameDisplay.blit(cScoreImg, (sx,sy))
+        gameDisplay.blit(mScoreImg, (0, cScore_height + 10))
+        gameDisplay.blit(cpointsImg, (cScore_width,0))
+        gameDisplay.blit(mpointsImg, (mScore_width,mScore_height+10))
+        pygame.display.flip()
 #set up fps
     clock.tick(60)
-
-
+    
 pygame.quit()
+
+   
+    
         
 
             
