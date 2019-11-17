@@ -96,20 +96,32 @@ while game_over == False:
 #set up key press definitions for controlling the cat
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                x_change = -5
+                if cpoint_count < mpoint_count:
+                    x_change = -10
+                else:
+                    x_change = -5
                     
             elif event.key == pygame.K_RIGHT:
-                x_change = 5
+                if cpoint_count < mpoint_count:
+                    x_change = 10
+                else:
+                    x_change = 5
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 x_change = 0
-                #x += x_change
+                
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                y_change = -5
+                if cpoint_count < mpoint_count:
+                    y_change = -10
+                else:
+                    y_change = -5
             elif event.key == pygame.K_DOWN:
-                y_change = +5
+                if cpoint_count < mpoint_count:
+                    y_change = 10
+                else:
+                    y_change = 5
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                 y_change = 0
@@ -118,10 +130,16 @@ while game_over == False:
 #set up key press definitions for controlling the mouse
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
-                mx_change = -5
+                if mpoint_count < cpoint_count:
+                    mx_change = -10
+                else:
+                    mx_change = -5
                     
             elif event.key == pygame.K_d:
-                mx_change = 5
+                if mpoint_count < cpoint_count:
+                    mx_change = 10
+                else:                
+                    mx_change = 5
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_a or event.key == pygame.K_d:
                 mx_change = 0
@@ -129,18 +147,18 @@ while game_over == False:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
-                my_change = -5
+                if mpoint_count < cpoint_count:
+                    my_change = -10
+                else:                
+                    my_change = -5
             elif event.key == pygame.K_s:
-                my_change = +5
+                if mpoint_count < cpoint_count:
+                    my_change = 10
+                else:                
+                    my_change = +5
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_w or event.key == pygame.K_s:
                 my_change = 0
-        
-    
-    
-    
-    
-          
 
 #set up x & y change of cat to stay within window boundaries
     
@@ -200,8 +218,6 @@ while game_over == False:
         
             
                  
-
-
         
 
 #draw the frame
