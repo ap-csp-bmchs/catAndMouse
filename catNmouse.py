@@ -184,9 +184,6 @@ while game_over == False:
         my += my_change
 
 
-#set up what happens when images collide
-#make the cat or mouse move faster if lost round
-#make the game end when the cat or mouse reaches 5 points
 #set up a 3,2,1 countdown with images between points
     catRect = pygame.Rect(x, y, cat_width, cat_height)
     mouseRect = pygame.Rect(mx, my, mouse_width, mouse_height)
