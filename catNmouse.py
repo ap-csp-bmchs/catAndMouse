@@ -3,6 +3,10 @@ import random
 import time
 
 pygame.init()
+pygame.mixer.music.load('AssaultEncounter.mp3')
+#pygame.mixer.Channel(0).play(pygame.mixer.Sound('AssaultEncounter.mp3'))
+#
+pygame.mixer.music.play(-1)
 
 display_width = 1000
 display_height = 800
@@ -184,7 +188,7 @@ while game_over == False:
         my += my_change
 
 
-#set up a 3,2,1 countdown with images between points
+#set up collisions
     catRect = pygame.Rect(x, y, cat_width, cat_height)
     mouseRect = pygame.Rect(mx, my, mouse_width, mouse_height)
     
@@ -195,12 +199,14 @@ while game_over == False:
         my = 0
         cpoint_count += 1
         cpointsImg = pygame.image.load(points[cpoint_count])
+        
+        pygame.mixer.music.load('catYum.wav')
+        pygame.mixer.music.play(0)        
         if cpoint_count == 5:
             game_over = True
             cat_win = True
-            
-                        
-            
+                
+           
         
     if mouseRect.colliderect(cheeseRect):
         mx = (display_width - mouse_width)
@@ -208,21 +214,21 @@ while game_over == False:
         x = (50)
         y = (display_height - cat_height*2)
         mpoint_count += 1
-        mpointsImg = pygame.image.load(points[mpoint_count])  
+        mpointsImg = pygame.image.load(points[mpoint_count]) 
+        pygame.mixer.music.load('mouseYum.wav')
+        pygame.mixer.music.play(0)        
         if mpoint_count == 5:
             game_over = True 
             mouse_win = True
-        
-            
-                 
-        
+     
 
 #draw the frame
     gameDisplay.fill(white)
     cat(x,y)
     mouse(mx,my)
     cheese(cx,cy)
-    
+
+#cat win ending
     if cat_win == True:
         gameDisplay.blit(catWinImg, (display_width * .35, display_height * .35))
         gameDisplay.blit(cScoreImg, (sx,sy))
@@ -230,8 +236,12 @@ while game_over == False:
         gameDisplay.blit(cpointsImg, (cScore_width,0))
         gameDisplay.blit(mpointsImg, (mScore_width,mScore_height+10))        
         pygame.display.flip()
+        pygame.mixer.music.load('catCall.wav')
+        pygame.mixer.music.play(0)
         time.sleep(10)
-        pygame.quit() 
+        pygame.quit()
+        
+#mouse win ending
     elif mouse_win == True:
         gameDisplay.blit(mouseWinImg, (display_width * .35, display_height * .35))
         gameDisplay.blit(cScoreImg, (sx,sy))
@@ -239,8 +249,12 @@ while game_over == False:
         gameDisplay.blit(cpointsImg, (cScore_width,0))
         gameDisplay.blit(mpointsImg, (mScore_width,mScore_height+10)) 
         pygame.display.flip()
+        pygame.mixer.music.load('mouseCall.wav')
+        pygame.mixer.music.play(0)        
         time.sleep(10)
-        pygame.quit()    
+        pygame.quit()  
+        
+#if nobody has won
     else:
         gameDisplay.blit(cScoreImg, (sx,sy))
         gameDisplay.blit(mScoreImg, (0, cScore_height + 10))
@@ -249,7 +263,8 @@ while game_over == False:
         pygame.display.flip()
 #set up fps
     clock.tick(60)
-    
+
+#if gameloop has been broken
 pygame.quit()
 
    
