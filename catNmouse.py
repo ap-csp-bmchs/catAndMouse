@@ -3,10 +3,6 @@ import random
 import time
 
 pygame.init()
-pygame.mixer.music.load('AssaultEncounter.mp3')
-#pygame.mixer.Channel(0).play(pygame.mixer.Sound('AssaultEncounter.mp3'))
-#
-pygame.mixer.music.play(-1)
 
 display_width = 1000
 display_height = 800
@@ -17,6 +13,8 @@ clock = pygame.time.Clock()
 
 catImg = pygame.image.load('cat.png')
 mouseImg = pygame.image.load('mouse.png')
+wall1Img = pygame.image.load('wall1.png')
+wall2Img = pygame.image.load('wall2.png')
 cheeseImg = pygame.image.load('cheese.png')
 cScoreImg = pygame.image.load('cScore.png')
 mScoreImg = pygame.image.load('mScore.png')
@@ -43,6 +41,10 @@ cScore_width = 206
 cScore_height = 29
 mScore_width = 206
 mScore_height = 29
+wall1_width = 130
+wall1_height = 33
+wall2_width = 33
+wall2_height = 130
 
 #cat starting point info
 x = (50)
@@ -56,6 +58,12 @@ mouseRect = pygame.Rect(mx, my, mouse_width, mouse_height)
 cx = 0
 cy = display_height - cheese_height
 cheeseRect = pygame.Rect(cx, cy, cheese_width, cheese_height)
+#wall starting point info
+w1x = (mouse_width+3)
+w1y = (display_height - (wall2_height - 3))
+w2x = (w1x + wall1_width)
+w2y = (display_height - wall2_height)
+
 #score location
 sx = 0
 sy = 0
@@ -85,6 +93,12 @@ def mouse(mx,my):
 
 def cheese(cx,cy):
     gameDisplay.blit(cheeseImg, (cx,cy))
+    
+def wall1(w1x , w1y):
+    gameDisplay.blit(wall1Img, (w1x, w1y))
+    
+def wall2(w2x , w2y):
+    gameDisplay.blit(wall2Img, (w2x, w2y))
 
 #game loop
 cat_win = False
@@ -103,13 +117,13 @@ while game_over == False:
                 if cpoint_count < mpoint_count:
                     x_change = -10
                 else:
-                    x_change = -5
+                    x_change = -3
                     
             elif event.key == pygame.K_RIGHT:
                 if cpoint_count < mpoint_count:
                     x_change = 10
                 else:
-                    x_change = 5
+                    x_change = 3
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 x_change = 0
@@ -120,12 +134,12 @@ while game_over == False:
                 if cpoint_count < mpoint_count:
                     y_change = -10
                 else:
-                    y_change = -5
+                    y_change = -3
             elif event.key == pygame.K_DOWN:
                 if cpoint_count < mpoint_count:
                     y_change = 10
                 else:
-                    y_change = 5
+                    y_change = 3
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                 y_change = 0
@@ -227,6 +241,8 @@ while game_over == False:
     cat(x,y)
     mouse(mx,my)
     cheese(cx,cy)
+    wall1(w1x, w1y)
+    wall2(w2x, w2y)
 
 #cat win ending
     if cat_win == True:
@@ -260,6 +276,7 @@ while game_over == False:
         gameDisplay.blit(mScoreImg, (0, cScore_height + 10))
         gameDisplay.blit(cpointsImg, (cScore_width,0))
         gameDisplay.blit(mpointsImg, (mScore_width,mScore_height+10))
+        
         pygame.display.flip()
 #set up fps
     clock.tick(60)
