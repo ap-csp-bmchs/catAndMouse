@@ -45,8 +45,8 @@ wall2_width = 33
 wall2_height = 130
 
 # cat starting point info
-x = 50
-y = (display_height - cat_height * 2)
+x = 300
+y = 500
 catRect = pygame.Rect(x, y, cat_width, cat_height)
 # mouse starting point info
 mx = (display_width - mouse_width)
@@ -58,9 +58,11 @@ cy = display_height - cheese_height
 cheeseRect = pygame.Rect(cx, cy, cheese_width, cheese_height)
 # wall starting point info
 w1x = (mouse_width + 3)
-w1y = (display_height - (wall2_height - 3))
+w1y = (display_height - (wall2_height +mouse_height + 3))
 w2x = (w1x + wall1_width)
-w2y = (display_height - wall2_height)
+w2y = (display_height - (wall2_height + mouse_height + 3))
+wall1Rect = pygame.Rect(w1x, w1y, wall1_width, wall1_height)
+wall2Rect = pygame.Rect(w2x, w2y, wall2_width, wall2_height)
 
 # score location
 sx = 0
@@ -177,11 +179,21 @@ while not game_over:
     # set up x & y change of cat to stay within window boundaries
     new_x = x + x_change
     new_y = y + y_change
+    # is cat within screen
     if 0 <= new_x <= display_width - cat_width:
+        # is cat outside of wall 1?
+        if w1x < new_x < w1x + wall1_width and w1y < new_y < w1y + wall1_height:
+            x_change = 0
         x += x_change
-
     if 0 <= new_y <= display_height - cat_height:
+        if w1y < new_y < w1y + wall1_height and w1x < new_x < w1x + wall1_width:
+            y_change = 0
         y += y_change
+        # is cat outside of wall 2?
+
+
+
+
 
     # set up x & y change of mouse to stay within window boundaries
     new_mx = mx + mx_change
