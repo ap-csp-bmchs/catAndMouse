@@ -10,6 +10,7 @@ gameDisplay = pygame.display.set_mode((display_width, display_height))
 
 pygame.display.set_caption('Cat N Mouse')
 clock = pygame.time.Clock()
+timer = 0
 
 # store all images into variables
 catImg = pygame.image.load('cat.png')
@@ -21,6 +22,7 @@ cScoreImg = pygame.image.load('cScore.png')
 mScoreImg = pygame.image.load('mScore.png')
 catWinImg = pygame.image.load('big_cat.png')
 mouseWinImg = pygame.image.load('big_mouse.png')
+dogImg = pygame.image.load('dog.png')
 
 points = ['zero.png', 'one.png', 'two.png', 'three.png', 'four.png', 'five.png']
 cpoint_count = 0
@@ -31,6 +33,8 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 cat_width = 131
 cat_height = 75
+dog_width = 219
+dog_height = 195
 mouse_width = 38
 mouse_height = 25
 cheese_width = 35
@@ -60,6 +64,9 @@ mouseRect = pygame.Rect(mx, my, mouse_width, mouse_height)
 cx = 0
 cy = display_height - cheese_height
 cheeseRect = pygame.Rect(cx, cy, cheese_width, cheese_height)
+# dog starting point info
+dx = random.randint(0, display_width - dog_width)
+dy = random.randint(0, display_height - dog_height)
 # wall starting point info
 w1x = (mouse_width + 3)
 w1y = (display_height - (wall2_height + mouse_height + 3))
@@ -103,6 +110,9 @@ def wall1():
 
 def wall2():
     gameDisplay.blit(wall2Img, (w2x, w2y))
+
+def dog(dx, dy):
+    gameDisplay.blit(dogImg, (dx, dy))
 
 
 # game loop
@@ -210,9 +220,25 @@ while not game_over:
     new_my = my + my_change
 
     if 0 <= new_mx <= display_width - mouse_width:
+        # is mouse touching wall 1 after x movement?
+        if w1x < new_mx < w1x + wall1_width or w1x < new_mx + mouse_width < w1x + wall1_width:
+            if mouseRect.colliderect(wall1Rect):
+                mx_change = 0
+        # is mouse touching wall 2 after x movement?
+        if w2x < new_mx < w2x + wall2_width or w2x < new_mx + mouse_width < w2x + wall2_width:
+            if mouseRect.colliderect(wall2Rect):
+                mx_change = 0
         mx += mx_change
 
     if 0 <= new_my <= display_height - mouse_height:
+        # is mouse touching wall 1 after y movement?
+        if w1y < new_my < w1y + wall1_height or w1y < new_my + mouse_height < w1y + wall1_height:
+            if mouseRect.colliderect(wall1Rect):
+                my_change = 0
+        # is mouse touching wall 2 after y movement?
+        if w2y < new_my < w2y + wall2_height or w2y < new_my + mouse_height < w2y + wall2_height:
+            if mouseRect.colliderect(wall2Rect):
+                my_change = 0
         my += my_change
 
     # set up collisions between cat, mouse, cheese
@@ -253,6 +279,13 @@ while not game_over:
     cheese()
     wall1()
     wall2()
+    if dx < 0 or dx + dog_width > display_width:
+        dx = random.randint(0, display_width - dog_width)
+    if dy < 0 or dy + dog_height > display_height:
+        dy = random.randint(0, display_height - dog_height)
+    dog(dx, dy)
+    dx += 5
+    dy += 5
 
     # cat win ending
     if cat_win:
@@ -290,6 +323,7 @@ while not game_over:
 
     # set up fps
     clock.tick(60)
+    timer += 1
 
 # if game loop has been broken
 pygame.quit()
