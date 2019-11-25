@@ -45,12 +45,16 @@ wall2_width = 33
 wall2_height = 130
 
 # cat starting point info
-x = 300
-y = 500
+cat_startx = 250
+cat_starty = 550
+x = 250
+y = 550
 catRect = pygame.Rect(x, y, cat_width, cat_height)
 # mouse starting point info
-mx = (display_width - mouse_width)
-my = 0
+mouse_startx = display_width - 200
+mouse_starty = 100
+mx = display_width - 200
+my = 100
 mouseRect = pygame.Rect(mx, my, mouse_width, mouse_height)
 # cheese starting point info
 cx = 0
@@ -58,7 +62,7 @@ cy = display_height - cheese_height
 cheeseRect = pygame.Rect(cx, cy, cheese_width, cheese_height)
 # wall starting point info
 w1x = (mouse_width + 3)
-w1y = (display_height - (wall2_height +mouse_height + 3))
+w1y = (display_height - (wall2_height + mouse_height + 3))
 w2x = (w1x + wall1_width)
 w2y = (display_height - (wall2_height + mouse_height + 3))
 wall1Rect = pygame.Rect(w1x, w1y, wall1_width, wall1_height)
@@ -181,19 +185,25 @@ while not game_over:
     new_y = y + y_change
     # is cat within screen
     if 0 <= new_x <= display_width - cat_width:
-        # is cat outside of wall 1?
-        if w1x < new_x < w1x + wall1_width and w1y < new_y < w1y + wall1_height:
-            x_change = 0
+        # is cat touching wall 1 after x movement?
+        if w1x < new_x < w1x + wall1_width or w1x < new_x + cat_width < w1x + wall1_width:
+            if catRect.colliderect(wall1Rect):
+                x_change = 0
+        # is cat touching wall 2 after x movement?
+        if w2x < new_x < w2x + wall2_width or w2x < new_x + cat_width < w2x + wall2_width:
+            if catRect.colliderect(wall2Rect):
+                x_change = 0
         x += x_change
     if 0 <= new_y <= display_height - cat_height:
-        if w1y < new_y < w1y + wall1_height and w1x < new_x < w1x + wall1_width:
-            y_change = 0
+        # is cat touching wall 1 after y movement?
+        if w1y < new_y < w1y + wall1_height or w1y < new_y + cat_height < w1y + wall1_height:
+            if catRect.colliderect(wall1Rect):
+                y_change = 0
+        # is cat touching wall 2 after y movement?
+        if w2y < new_y < w2y + wall2_height or w2y < new_y + cat_height < w2y + wall2_height:
+            if catRect.colliderect(wall2Rect):
+                y_change = 0
         y += y_change
-        # is cat outside of wall 2?
-
-
-
-
 
     # set up x & y change of mouse to stay within window boundaries
     new_mx = mx + mx_change
@@ -205,15 +215,15 @@ while not game_over:
     if 0 <= new_my <= display_height - mouse_height:
         my += my_change
 
-    # set up collisions
+    # set up collisions between cat, mouse, cheese
     catRect = pygame.Rect(x, y, cat_width, cat_height)
     mouseRect = pygame.Rect(mx, my, mouse_width, mouse_height)
 
     if catRect.colliderect(mouseRect):
-        x = 50
-        y = (display_height - cat_height * 2)
-        mx = (display_width - mouse_width)
-        my = 0
+        x = cat_startx
+        y = cat_starty
+        mx = mouse_startx
+        my = mouse_starty
         cpoint_count += 1
         cpointsImg = pygame.image.load(points[cpoint_count])
 
@@ -224,10 +234,10 @@ while not game_over:
             cat_win = True
 
     if mouseRect.colliderect(cheeseRect):
-        mx = (display_width - mouse_width)
-        my = 0
-        x = (50)
-        y = (display_height - cat_height * 2)
+        mx = mouse_startx
+        my = mouse_starty
+        x = cat_startx
+        y = cat_starty
         mpoint_count += 1
         mpointsImg = pygame.image.load(points[mpoint_count])
         pygame.mixer.music.load('mouseYum.wav')
