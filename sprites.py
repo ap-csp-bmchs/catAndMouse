@@ -27,10 +27,10 @@ cat_height = 100
 new_x = 0
 new_y = 0
 
-mx = (display_width * 0.45)
-startmx = (display_width * 0.45)
-my = (display_height * 0.45)
-startmy = (display_width * 0.45)
+mx = (0)
+startmx = (0)
+my = (0)
+startmy = (0)
 mx_change = 0
 my_change = 0
 mouse_width = 80
